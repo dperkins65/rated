@@ -1,0 +1,35 @@
+{% extends "base.html" %}
+
+{% block content %}
+
+	<div class="jumbotron">
+
+		{% if not g.user.s1 %}
+		<h2>Hello</h2>
+		{% else %}
+		<h2>Welcome back.</h2>
+		{% endif %}
+
+		<p>Please rate some damn beers.</p>
+
+	</div>
+
+	<div class="row">
+
+		<div class="col-md-3">
+			{% if not g.user.s1 %}
+				<p><a class="btn btn-primary btn-lg btn-block" href="{{ url_for('survey_1')}}" role="button">Beer 1</a></p>
+			{% elif g.user.s1 %}
+				<a class="btn btn-primary btn-lg btn-block disabled" role="button">
+					<span class="glyphicon glyphicon-ok pull-left"></span>	Beer 1
+				</a>
+				<br>
+				<p>Thanks for rating beer 1.</p>
+			{% else %}
+			<p><a class="btn btn-primary btn-lg btn-block disabled" role="button">Beer 1</a></p>
+			{% endif %}
+		</div>
+
+	</div>
+
+{% endblock %}

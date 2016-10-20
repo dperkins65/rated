@@ -1,0 +1,16 @@
+*.pyc
+*.log
+
+.idea
+components
+node_modules
+build
+_site
+*.lock
+tmp
+
+scratch/*
+*.orig
+*.bak
+*.DS_Store
+*.db

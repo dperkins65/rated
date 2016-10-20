@@ -1,0 +1,40 @@
+{% extends "admin/layout.html" %}
+
+{% block content%}
+
+<div class="page-header">
+   <h2>Beer 1</h2>
+</div>
+
+<div class="row">
+  <div class="col-md-3">
+      <p><a class="btn btn-default btn-lg btn-block" href="{{ url_for('admin_survey1')}}" role="button">Beer 1</a></p>
+  </div>
+</div>
+
+<div class="page-header">
+   <h3>User Responses</h3>
+</div>
+
+<div class="row">
+  <div class="col-md-12">
+  <table class="table table-bordered datatable" cellspacing="0" width="100%" style="background-color:#464545;">
+    <thead>
+      <tr>
+        <th>Name</th>
+        <th>Rating</th>
+      </tr>
+    </thead>
+    <tbody>
+      {% for survey in surveys %}
+      <tr>
+        <td>{{ survey.user.name }}</td>
+        <td>{{ survey.rating }}</td>
+      </tr>
+      {% endfor %}
+    </tbody>
+  </table>
+  </div>
+</div>
+
+{% endblock %}

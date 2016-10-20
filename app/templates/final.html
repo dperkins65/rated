@@ -1,0 +1,22 @@
+{% extends "base_simple.html" %}
+
+{% block content %}
+
+<div class="row">
+  <div class="col-lg-12 well text-center">
+    <div>
+      <img src="{{ url_for('static', filename='img/dharma1.png') }}" width="200" style="float:center;"/>
+    </div>
+    <h2>Thank you for your participation in our research study!</h2>
+    <h3>You have now completed all the steps and are entered into our drawing.</h3>
+    <b>
+      Further instructions will be provided by way of your group leader.<br>
+      Best of luck!
+    </b>
+  </div>
+  <div class="col-lg-12 well text-center">
+    <small>Top Secret - Dharma Initiative: Task Force Echo - Human Trials 0014</small>
+  </div>
+</div>
+
+{% endblock %}
