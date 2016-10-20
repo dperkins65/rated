@@ -15,7 +15,10 @@ lm.init_app(app)
 lm.login_view = 'login'
 
 app.secret_key = os.urandom(24)
-app.permanent_session_lifetime = timedelta(minutes=120)
+app.permanent_session_lifetime = timedelta(minutes=240)
 
-import views
+from app.views import admin
+from app.views import general
+from app.views import survey
+
 import models
