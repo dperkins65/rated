@@ -2,6 +2,7 @@
 
 from mixins import CRUDMixin
 from flask.ext.login import UserMixin
+from sqlalchemy.orm import validates
 
 from app import db
 
@@ -11,22 +12,17 @@ ROLE_ADMIN = 1
 
 
 class User(UserMixin, CRUDMixin, db.Model):
+    __tablename__ = 'users'
     id = db.Column(db.Integer, primary_key=True, unique=True)
-    userid = db.Column(db.String(255), unique=True)
     name = db.Column(db.String(255), unique=True)
     role = db.Column(db.SmallInteger, default=ROLE_USER)
-    s1 = db.Column(db.Boolean)
 
     def __init__(
             self,
             name=None,
-            userid=None,
-            role=None,
-            s1=False):
+            role=None):
         self.name = name
-        self.userid = userid
         self.role = role
-        self.s1 = s1
 
     def is_admin(self):
         if self.role == 1:
@@ -34,26 +30,88 @@ class User(UserMixin, CRUDMixin, db.Model):
         else:
             return False
 
-    def is_active(self):
-        return True
-
-    def get_id(self):
-        return unicode(self.id)
-
     def __repr__(self):
         return '<User %r>' % (self.name)
 
 
-class Survey1(db.Model):
-    id = db.Column(db.Integer, primary_key=True)
-    rating = db.Column(db.Integer)
-    user_id = db.Column(db.Integer, db.ForeignKey('user.id'))
-    user = db.relationship('User', uselist=False, backref='survey1')
+class Style(CRUDMixin, db.Model):
+    __tablename__ = 'styles'
+    id = db.Column(db.Integer, primary_key=True, unique=True)
+    name = db.Column(db.String(255), unique=True)
+    # beers = db.relationship('Beer', backref='style', lazy='dynamic')
 
     def __init__(
             self,
-            rating=None):
-        self.rating=rating
+            name=None):
+        self.name = name
 
-    def get_id(self):
-        return unicode(self.id)
+    def __repr__(self):
+        return '<Style %r>' % (self.name)
+
+
+class Brewery(CRUDMixin, db.Model):
+    __tablename__ = 'breweries'
+    id = db.Column(db.Integer, primary_key=True, unique=True)
+    name = db.Column(db.String(255), unique=True)
+    # beers = db.relationship('Beer', backref='style', lazy='dynamic')
+
+    def __init__(
+            self,
+            name=None):
+        self.name = name
+
+    def __repr__(self):
+        return '<Brewery %r>' % (self.name)
+
+
+class Beer(CRUDMixin, db.Model):
+    __tablename__ = 'beers'
+    id = db.Column(db.Integer, primary_key=True, unique=True)
+    brewery = db.relationship('Brewery')
+    brewery_id = db.Column(db.Integer, db.ForeignKey('breweries.id'))
+    name = db.Column(db.String(255))
+    style = db.relationship('Style')
+    style_id = db.Column(db.Integer, db.ForeignKey('styles.id'))
+    abv = db.Column(db.Numeric(3,1))
+    ba = db.Column(db.Integer)
+    notes = db.Column(db.Text)
+
+    def __init__(
+            self,
+            brewery=None,
+            name=None,
+            style=None,
+            abv=None,
+            ba=None,
+            notes=None):
+        self.brewery = brewery
+        self.name = name
+        self.style = style
+        self.abv = abv
+        self.ba = ba
+        self.notes = notes
+
+    def __repr__(self):
+        return '<Beer %r %r>' % (self.brewery.name, self.name)
+
+
+class Survey(db.Model):
+    __tablename__ = 'surveys'
+    id = db.Column(db.Integer, primary_key=True)
+    rating = db.Column(db.Integer)
+    user = db.relationship('User', uselist=False, backref='surveys')
+    user_id = db.Column(db.Integer, db.ForeignKey('users.id'))
+    beer = db.relationship('Beer')
+    beer_id = db.Column(db.Integer, db.ForeignKey('beers.id'))
+
+    def __init__(
+            self,
+            rating=None,
+            user=None,
+            beer=None):
+        self.rating = rating
+        self.user = user
+        self.beer = beer
+
+    def __repr__(self):
+        return '<Survey %r %r>' % (self.user.name, self.beer)

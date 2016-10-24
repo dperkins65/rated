@@ -5,7 +5,7 @@ from flask.ext.login import login_required
 
 from app import app
 from app.decorators import admin_required
-from app.models import User, Survey1
+from app.models import User, Survey
 
 
 @app.route('/admin')
@@ -16,9 +16,9 @@ def admin():
     return render_template('admin/index.html', title="Admin", users=users)
 
 
-@app.route('/admin_survey1/')
+@app.route('/admin_survey/')
 @login_required
 @admin_required
-def admin_survey1():
-    surveys = Survey1.query.all()
-    return render_template('admin/partials/survey1.html', title='Admin Survey-1', surveys=surveys)
+def admin_survey():
+    surveys = Survey.query.all()
+    return render_template('admin/partials/survey.html', title='Admin Survey-1', surveys=surveys)

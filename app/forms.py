@@ -12,9 +12,8 @@ class LoginForm(Form):
         return db.session.query(User).filter_by(name=self.name.data).first()
 
 
-class Survey1Form(Form):
+class SurveyForm(Form):
     rating = fields.RadioField('Rating',
         choices=[('1', 'One Point'), ('2', 'Two Points'),
             ('3', 'Three Points'), ('4', 'Four Points'), ('5', 'Five Points')],
         validators=[Required()], default=None)
-

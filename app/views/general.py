@@ -1,14 +1,13 @@
 # -*- coding: utf-8 -*-
 
-import uuid
 from flask import render_template, flash, redirect
 from flask import url_for, g, request
 from flask.ext.login import login_user, logout_user, current_user, login_required
 from flask.ext.sqlalchemy import get_debug_queries
 
 from app import app, db, lm
-from app.models import User
-from app.forms import LoginForm, Survey1Form
+from app.models import User, Beer, Survey
+from app.forms import LoginForm, SurveyForm
 
 from config import DATABASE_QUERY_TIMEOUT
 
@@ -20,7 +19,14 @@ def index():
     user = g.user
     if user.is_admin():
         return redirect(url_for('admin'))
-    return render_template("index.html", title="Home", user=user)
+    all_beers = Beer.query.all()
+    completed_surveys = Survey.query.filter(Survey.user == user).all()
+    surveyed_beers = [x.beer for x in completed_surveys]
+    return render_template("index.html",
+                           title="Home",
+                           user=user,
+                           all_beers=all_beers,
+                           surveyed_beers=surveyed_beers)
 
 
 @app.route('/login/', methods=['GET', 'POST'])
@@ -31,7 +37,7 @@ def login():
             user = form.get_user()
             login_user(user)
         except: #TODO fix exception type/reason
-            user = User(name=form.name.data, userid=(str(uuid.uuid1())))
+            user = User(name=form.name.data)
             db.session.add(user)
             db.session.commit()
             login_user(user)

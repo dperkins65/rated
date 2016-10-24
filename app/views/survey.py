@@ -1,28 +1,27 @@
 # -*- coding: utf-8 -*-
 
 from flask import render_template, redirect
-from flask import url_for, g, request
+from flask import url_for, g, request, session
 from flask.ext.login import current_user, login_required
 
 from app import app, db
-from app.models import User, Survey1
-from app.forms import Survey1Form
+from app.models import Survey, Beer
+from app.forms import SurveyForm
 
 
-@app.route('/survey_1/', methods=['GET', 'POST'])
+@app.route('/survey/', methods=['GET', 'POST'])
 @login_required
-def survey_1():
-    g.user = current_user
-    if g.user.s1 is False:
-        form = Survey1Form(request.form)
-        if form.validate_on_submit():
-            survey = Survey1()
-            form.populate_obj(survey)
-            survey.user = g.user
-            db.session.add(survey)
-            g.user.s1 = True
-            db.session.commit()
-            return redirect(request.args.get("next") or url_for("index"))
-        return render_template('survey/Survey1.html', title='Survey', form=form)
-    else:
-        return redirect(url_for('index'))
+def survey():
+    beer_id = request.args.get('beer_id', None)
+    if beer_id:
+        session['beer_id'] = beer_id
+    form = SurveyForm(request.form)
+    if request.method == 'POST' and form.validate():
+        survey = Survey()
+        form.populate_obj(survey)
+        survey.user = current_user
+        survey.beer = Beer.query.get(session['beer_id'])
+        db.session.add(survey)
+        db.session.commit()
+        return redirect(request.args.get("next") or url_for("index"))
+    return render_template('survey/survey.html', title='Survey', form=form)
