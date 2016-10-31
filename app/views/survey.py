@@ -24,4 +24,4 @@ def survey():
         db.session.add(survey)
         db.session.commit()
         return redirect(request.args.get("next") or url_for("index"))
-    return render_template('survey/survey.html', title='Survey', form=form)
+    return render_template('survey.html', title='Survey', form=form)

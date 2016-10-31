@@ -17,13 +17,12 @@
           <form method="POST" action=".">
             <fieldset>
               {{ form.csrf_token }}
-              {{ render_field(form.name, class="form-control", placeholder="Your first name or nickname") }}
+              {{ render_field(form.name, class="form-control", autocomplete="off", placeholder="Your first name or nickname") }}
               <button type="submit" id="sign_in" class="btn btn-primary btn-block">Log in</button>
             </fieldset>
           </form>
       </div>
     </div>
-
   </div>
 </div>
 

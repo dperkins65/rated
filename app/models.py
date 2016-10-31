@@ -3,6 +3,7 @@
 from mixins import CRUDMixin
 from flask.ext.login import UserMixin
 from sqlalchemy.orm import validates
+from sqlalchemy.schema import UniqueConstraint
 
 from app import db
 
@@ -38,7 +39,6 @@ class Style(CRUDMixin, db.Model):
     __tablename__ = 'styles'
     id = db.Column(db.Integer, primary_key=True, unique=True)
     name = db.Column(db.String(255), unique=True)
-    # beers = db.relationship('Beer', backref='style', lazy='dynamic')
 
     def __init__(
             self,
@@ -53,7 +53,6 @@ class Brewery(CRUDMixin, db.Model):
     __tablename__ = 'breweries'
     id = db.Column(db.Integer, primary_key=True, unique=True)
     name = db.Column(db.String(255), unique=True)
-    # beers = db.relationship('Beer', backref='style', lazy='dynamic')
 
     def __init__(
             self,
@@ -67,14 +66,15 @@ class Brewery(CRUDMixin, db.Model):
 class Beer(CRUDMixin, db.Model):
     __tablename__ = 'beers'
     id = db.Column(db.Integer, primary_key=True, unique=True)
-    brewery = db.relationship('Brewery')
+    brewery = db.relationship('Brewery', backref='beers')
     brewery_id = db.Column(db.Integer, db.ForeignKey('breweries.id'))
     name = db.Column(db.String(255))
-    style = db.relationship('Style')
+    style = db.relationship('Style', backref='beers')
     style_id = db.Column(db.Integer, db.ForeignKey('styles.id'))
     abv = db.Column(db.Numeric(3,1))
     ba = db.Column(db.Integer)
     notes = db.Column(db.Text)
+    __table_args__ = (UniqueConstraint('brewery_id', 'name'),)
 
     def __init__(
             self,

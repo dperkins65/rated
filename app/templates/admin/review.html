@@ -1,0 +1,142 @@
+{% extends "admin/layout.html" %}
+
+
+{% block extra_css %}
+{{super()}}
+<style type="text/css">
+
+  .top-buffer {
+    margin-top:20px;
+  }
+
+  .bottom-buffer {
+    margin-bottom:20px;
+  }
+
+  /*#review-carousel {
+    text-align: center;
+  }*/
+
+  /*.carousel-inner > .item {
+    min-height: 400px;
+  }*/
+
+  .carousel-inner > .item > img {
+    margin: 0 auto;
+    opacity: 0.3;
+  }
+
+  /*.carousel-inner > .item > object {
+    margin: 0 auto;
+  }
+
+  .carousel-inner > .item > object > img {
+    margin: 0 auto;
+  }*/
+
+</style>
+{% endblock %}
+
+
+{% block content %}
+<div class="page-header">
+   <h2>{{ title }}</h2>
+</div>
+
+<!--  https://bootstrapbay.com/blog/bootstrap-3-carousel-tutorial/ -->
+<div id="review-carousel" class="carousel slide" data-interval="false">
+  <!-- Wrapper for slides -->
+  <div class="carousel-inner">
+    <!-- Placeholder slide -->
+    <div class="item active">
+      <img src="{{ url_for('static', filename='img/beer/placeholder.png') }}" width="200"/>
+      <div class="carousel-caption">
+        <h3>Results Review</h3>
+        <h5>From worst to best, based on average score.<h5>
+      </div>
+    </div>
+    <!-- Results slides -->
+    {% for d in data %}
+    <div class="item">
+      <!-- <object data="{{ url_for('static', filename='img/beer/beer_{{ d.beer.id }}.jpg') }}" type="image/jpg"> -->
+      <img src="{{ url_for('static', filename='img/beer/placeholder.png') }}" width="200"/>
+      <!-- </object> TODO -->
+      <div class="carousel-caption">
+        <div class="row bottom-buffer">
+          <div class="col-md-3"></div>
+          <div class="col-md-6">
+            <h3>{{ d.brewery_name }}</h3>
+            <h3>{{ d.beer_name }}</h3>
+          </div>
+          <div class="col-md-3"></div>
+        </div>
+        <div class="row">
+          <div class="col-md-4"><h5>Standard Deviation</h5></div>
+          <div class="col-md-4"><h5>Average Score</h5></div>
+          <div class="col-md-4"><h5>Minimum / Maximum</h5></div>
+        </div>
+        <div class="row">
+          <div class="col-md-4"><p>{{ d.ratings_stdev }}</p></div>
+          <div class="col-md-4"><b style="color:red">{{ d.ratings_mean }}</b></div>
+          <div class="col-md-4"><p>{{ d.ratings_range[0] }} / {{ d.ratings_range[1] }}</p></div>
+        </div>
+      </div>
+    </div>
+    {% endfor %}
+
+  </div>
+  <a class="left carousel-control" href="#review-carousel" role="button" data-slide="prev">
+    <span class="icon-prev" aria-hidden="true"></span>
+    <span class="sr-only">Previous</span>
+  </a>
+  <a class="right carousel-control" href="#review-carousel" role="button" data-slide="next">
+    <span class="icon-next" aria-hidden="true"></span>
+    <span class="sr-only">Next</span>
+  </a>
+</div>
+
+<div class="page-header">
+   <h3>User Responses</h3>
+</div>
+
+<div class="row">
+  <div class="col-md-12">
+  <table id="user-ratings-table" class="table table-bordered datatable" cellspacing="0" width="100%" style="background-color:#464545;">
+    <thead>
+      <tr>
+        <th>Name</th>
+        <th>Rating</th>
+      </tr>
+    </thead>
+    <tbody></th>
+  </table>
+  </div>
+</div>
+{% endblock %}
+
+
+{% block extra_js %}
+{{super()}}
+<script type="text/javascript">
+// JSON data from view code
+var tableData = {{ jdata|safe }};
+
+// Reload user-ratings-table with a new data set on carousel slide transition
+$('#review-carousel').on('slid.bs.carousel', function() {
+  slideIndex = $('div.active').index();
+  dataIndex = (slideIndex-1);  // Slides and data are offset by 1
+  if (dataIndex < 0) {
+    userRatings = {}
+  } else {
+    userRatings = tableData[slideIndex-1].user_ratings;
+  }
+
+  // Get datatable object and update
+  tableObject = $('#user-ratings-table').DataTable();
+  tableObject.clear().draw();
+  for (i = 0; i < userRatings.length; i++) {
+    tableObject.row.add([userRatings[i].user, userRatings[i].rating]).draw();
+  }
+})
+</script>
+{% endblock %}
