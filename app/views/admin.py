@@ -1,9 +1,9 @@
 # -*- coding: utf-8 -*-
 
 from __future__ import division
-import numpy
 
-import sys, json
+import numpy, sys, json
+from operator import itemgetter
 
 from flask import render_template, request, redirect, url_for, flash
 from flask.ext.login import login_required
@@ -67,18 +67,19 @@ def results_review():
             ratings_range = (float('Inf'), float('Inf'))
         user_ratings = [{'user': survey.user.name,
                          'rating': survey.rating} for survey in surveys if survey.beer == beer]
-        data.append({'beer_name': beer.name,
+        data.append({'beer_id': beer.id,
+                     'beer_name': beer.name,
                      'brewery_name': beer.brewery.name,
                      'ratings_mean': ratings_mean,
                      'ratings_stdev': ratings_stdev,
                      'ratings_range': ratings_range,
                      'user_ratings': user_ratings,
                      })
-    data = sorted(data, key=lambda k: k['ratings_mean'])
-    jdata = json.dumps(data)
+    sdata = sorted(data, key=itemgetter('ratings_mean'))
+    jdata = json.dumps(data, sort_keys=False)
     return render_template('admin/review.html',
                            title='Results Review',
-                           data=data,
+                           data=sdata,
                            jdata=jdata)
 
 

@@ -67,6 +67,7 @@
           <div class="col-md-6">
             <h3>{{ d.brewery_name }}</h3>
             <h3>{{ d.beer_name }}</h3>
+            <p id="beer_id" hidden>{{ d.beer_id }}</p>
           </div>
           <div class="col-md-3"></div>
         </div>
@@ -123,12 +124,13 @@ var tableData = {{ jdata|safe }};
 
 // Reload user-ratings-table with a new data set on carousel slide transition
 $('#review-carousel').on('slid.bs.carousel', function() {
-  slideIndex = $('div.active').index();
-  dataIndex = (slideIndex-1);  // Slides and data are offset by 1
-  if (dataIndex < 0) {
-    userRatings = {}
-  } else {
-    userRatings = tableData[slideIndex-1].user_ratings;
+  var beerId = $('div.active').find('#beer_id').text();
+  var userRatings = {};
+  if (beerId > 0) {
+    var beerData = tableData.filter(function( obj ) {
+      return obj.beer_id == beerId;
+    });
+    userRatings = beerData[0].user_ratings;
   }
 
   // Get datatable object and update
