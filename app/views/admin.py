@@ -38,8 +38,8 @@ def admin_survey():
     except ZeroDivisionError:
         percent_complete = float('Inf')
     ratings_array = numpy.array([survey.rating for survey in surveys])
-    ratings_mean = numpy.mean(ratings_array, axis=0)
-    ratings_stdev = numpy.std(ratings_array, axis=0)
+    ratings_mean = numpy.around(numpy.mean(ratings_array, axis=0), decimals=2)
+    ratings_stdev = numpy.around(numpy.std(ratings_array, axis=0), decimals=2)
     return render_template('admin/survey.html',
                            title='Admin Beer %s' % beer_id,
                            beer_id=beer_id,

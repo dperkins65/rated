@@ -52,7 +52,7 @@
       <img src="{{ url_for('static', filename='img/beer/placeholder.png') }}" width="200"/>
       <div class="carousel-caption">
         <h3>Results Review</h3>
-        <h5>From worst to best, based on average score.<h5>
+        <h5>From worst to best, based on average rating.<h5>
       </div>
     </div>
     <!-- Results slides -->
@@ -72,14 +72,14 @@
           <div class="col-md-3"></div>
         </div>
         <div class="row">
-          <div class="col-md-4"><h5>Standard Deviation</h5></div>
-          <div class="col-md-4"><h5>Average Score</h5></div>
-          <div class="col-md-4"><h5>Minimum / Maximum</h5></div>
+          <div class="col-md-4"><h4>Standard Deviation</h4></div>
+          <div class="col-md-4"><h4>Average Score</h4></div>
+          <div class="col-md-4"><h4>Minimum / Maximum</h4></div>
         </div>
         <div class="row">
-          <div class="col-md-4"><p>{{ d.ratings_stdev }}</p></div>
-          <div class="col-md-4"><b style="color:red">{{ d.ratings_mean }}</b></div>
-          <div class="col-md-4"><p>{{ d.ratings_range[0] }} / {{ d.ratings_range[1] }}</p></div>
+          <div class="col-md-4"><h5>{{ d.ratings_stdev }}</h5></div>
+          <div class="col-md-4"><h5 style="color:red">{{ d.ratings_mean }}</h5></div>
+          <div class="col-md-4"><h5>{{ d.ratings_range[0] }} / {{ d.ratings_range[1] }}</h5></div>
         </div>
       </div>
     </div>
