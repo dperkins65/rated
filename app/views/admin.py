@@ -59,12 +59,12 @@ def results_review():
     for beer in beers:
         ratings_list = [survey.rating for survey in surveys if survey.beer == beer]
         ratings_array = numpy.array(ratings_list)
-        ratings_mean = numpy.mean(ratings_array, axis=0)
-        ratings_stdev = numpy.std(ratings_array, axis=0)
+        ratings_mean = numpy.nan_to_num(numpy.around(numpy.mean(ratings_array, axis=0), decimals=2))
+        ratings_stdev = numpy.nan_to_num(numpy.around(numpy.std(ratings_array, axis=0), decimals=2))
         try:
             ratings_range = (min(ratings_list), max(ratings_list))
         except ValueError:
-            ratings_range = (float('Inf'), float('Inf'))
+            ratings_range = (int(0), int(0))
         user_ratings = [{'user': survey.user.name,
                          'rating': survey.rating} for survey in surveys if survey.beer == beer]
         data.append({'beer_id': beer.id,
