@@ -11,10 +11,6 @@
     <table class="table table-bordered datatable" cellspacing="0" width="100%" style="background-color:#464545;">
       <tbody>
         <tr>
-          <th>Percent Complete</th>
-          <td>{{ percent_complete }}%</td>
-        </tr>
-        <tr>
           <th>Average Rating</th>
           <td>{{ ratings_mean }}</td>
         </tr>
@@ -22,7 +18,21 @@
           <th>Standard Deviation</th>
           <td>{{ ratings_stdev }}</td>
         </tr>
-        {# TODO: Add a row that shows users that have not yet submitted.  Also use percentages. #}
+        <tr>
+          <th>Percent Complete</th>
+          <td>{{ percent_complete }}%</td>
+        </tr>
+        {% if users_not_submitted == [] %}
+        <tr>
+          <th>Outstanding Submissions</th>
+          <td>None</td>
+        </tr>
+        {% else %}
+        <tr>
+          <th>Outstanding Submissions</th>
+          <td>{{ users_not_submitted }}</td>
+        </tr>
+        {% endif %}
       </tbody>
     </table>
   </div>

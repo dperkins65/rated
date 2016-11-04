@@ -32,7 +32,10 @@ def admin_survey():
     beer_id = request.args.get('beer_id', None)
     surveys = Survey.query.filter_by(beer_id=beer_id)
     survey_count = surveys.count()
-    user_count = User.query.filter_by(role=0).count()
+    users = User.query.filter_by(role=0)
+    user_count = users.count()
+    users_submitted = [x.user for x in surveys]
+    users_not_submitted = [x.name for x in users if x not in users_submitted]
     try:
         percent_complete = int(survey_count / user_count * 100)
     except ZeroDivisionError:
@@ -46,7 +49,8 @@ def admin_survey():
                            surveys=surveys,
                            percent_complete=percent_complete,
                            ratings_mean=ratings_mean,
-                           ratings_stdev=ratings_stdev)
+                           ratings_stdev=ratings_stdev,
+                           users_not_submitted=users_not_submitted)
 
 
 @app.route('/admin/results_review')
