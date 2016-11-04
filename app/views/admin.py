@@ -125,6 +125,7 @@ def add_style():
         except exc.SQLAlchemyError:
             flash(u"Style '%s' already exists in the database." % style.name)
         return redirect(url_for('add_style'))
+    session.pop('_flashes', None)
     return render_template('admin/add_style.html', title='Style Configuration', form=form)
 
 
@@ -143,6 +144,7 @@ def add_brewery():
         except exc.SQLAlchemyError:
             flash(u"Brewery '%s' already exists in the database." % brewery.name)
         return redirect(url_for('add_brewery'))
+    session.pop('_flashes', None)
     return render_template('admin/add_brewery.html', title='Brewery Configuration', form=form)
 
 
@@ -168,6 +170,7 @@ def add_beer():
         except exc.SQLAlchemyError:
             flash(u"Beer '%s' already exists in the database." % beer.name)
         return redirect(url_for('add_beer'))
+    session.pop('_flashes', None)
     return render_template('admin/add_beer.html', title='Beer Configuration', form=form)
 
 
