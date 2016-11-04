@@ -69,6 +69,8 @@ def results_review():
                          'rating': survey.rating} for survey in surveys if survey.beer == beer]
         data.append({'beer_id': beer.id,
                      'beer_name': beer.name,
+                     'beer_style': beer.style.name,
+                     'beer_notes': beer.notes,
                      'brewery_name': beer.brewery.name,
                      'ratings_mean': ratings_mean,
                      'ratings_stdev': ratings_stdev,

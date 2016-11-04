@@ -13,26 +13,10 @@
     margin-bottom:20px;
   }
 
-  /*#review-carousel {
-    text-align: center;
-  }*/
-
-  /*.carousel-inner > .item {
-    min-height: 400px;
-  }*/
-
   .carousel-inner > .item > img {
     margin: 0 auto;
     opacity: 0.3;
   }
-
-  /*.carousel-inner > .item > object {
-    margin: 0 auto;
-  }
-
-  .carousel-inner > .item > object > img {
-    margin: 0 auto;
-  }*/
 
 </style>
 {% endblock %}
@@ -64,9 +48,16 @@
       <div class="carousel-caption">
         <div class="row bottom-buffer">
           <div class="col-md-3"></div>
-          <div class="col-md-6">
+          <div class="col-md-12">
             <h3>{{ d.brewery_name }}</h3>
             <h3>{{ d.beer_name }}</h3>
+            <br>
+            <p>{{ d.beer_style }}</p>
+            {% if d.beer_notes %}
+            <p>{{ d.beer_notes }}</p>
+            {% else %}
+            <br>
+            {% endif %}
             <p id="beer_id" hidden>{{ d.beer_id }}</p>
           </div>
           <div class="col-md-3"></div>
