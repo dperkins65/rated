@@ -5,7 +5,7 @@ from __future__ import division
 import numpy, sys, json
 from operator import itemgetter
 
-from flask import render_template, request, redirect, url_for, flash
+from flask import render_template, request, redirect, url_for, flash, session
 from flask.ext.login import login_required
 
 from sqlalchemy import func, exc
@@ -169,3 +169,26 @@ def add_beer():
             flash(u"Beer '%s' already exists in the database." % beer.name)
         return redirect(url_for('add_beer'))
     return render_template('admin/add_beer.html', title='Beer Configuration', form=form)
+
+
+@app.route('/admin/utilities/')
+@login_required
+@admin_required
+def utilities():
+    session.pop('_flashes', None)
+    return render_template('admin/utilities.html', title='Admin Utilities')
+
+
+@app.route('/admin/utilities/clean_database')
+@login_required
+@admin_required
+def clean_database():
+    session.pop('_flashes', None)
+    try:
+        delete_count_users = User.query.filter_by(role=0).delete()
+        delete_count_surveys = Survey.query.delete()
+        db.session.commit()
+    except:
+        db.session.rollback()
+    flash(u"Successfully cleaned the database.  Deleted '%s' users and '%s' surveys." % (delete_count_users, delete_count_surveys))
+    return render_template('admin/utilities.html', title='Admin Utilities')
