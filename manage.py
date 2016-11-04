@@ -3,7 +3,7 @@
 from flask.ext.script import Manager
 
 from app import app, db
-from app.models import User
+# from app.models import User
 
 from seeds import seed_all
 

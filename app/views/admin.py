@@ -22,7 +22,7 @@ from app.forms import AddBeerForm, AddBreweryForm, AddStyleForm
 def admin():
     users = User.query.filter_by(role=0)
     all_beers = Beer.query.all()
-    return render_template('admin/index.html', title="Admin", users=users, all_beers=all_beers)
+    return render_template('admin/index.html', title="Admin", all_beers=all_beers)
 
 
 @app.route('/admin/survey/')
