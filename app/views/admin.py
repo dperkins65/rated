@@ -20,6 +20,7 @@ from app.forms import AddBeerForm, AddBreweryForm, AddStyleForm
 @login_required
 @admin_required
 def admin():
+    session.pop('_flashes', None)
     users = User.query.filter_by(role=0)
     all_beers = Beer.query.all()
     return render_template('admin/index.html', title="Admin", all_beers=all_beers)
@@ -121,11 +122,10 @@ def add_style():
         db.session.add(style)
         try:
             db.session.commit()
-            flash(u"Successfully added style '%s'" % style.name)
+            flash(u"Successfully added style '%s' as ID '%s'" % (style.name, style.id))
         except exc.SQLAlchemyError:
             flash(u"Style '%s' already exists in the database." % style.name)
         return redirect(url_for('add_style'))
-    session.pop('_flashes', None)
     return render_template('admin/add_style.html', title='Style Configuration', form=form)
 
 
@@ -140,11 +140,10 @@ def add_brewery():
         db.session.add(brewery)
         try:
             db.session.commit()
-            flash(u"Successfully added brewery '%s'" % brewery.name)
+            flash(u"Successfully added brewery '%s' as ID '%s'" % (brewery.name, brewery.id))
         except exc.SQLAlchemyError:
             flash(u"Brewery '%s' already exists in the database." % brewery.name)
         return redirect(url_for('add_brewery'))
-    session.pop('_flashes', None)
     return render_template('admin/add_brewery.html', title='Brewery Configuration', form=form)
 
 
@@ -166,11 +165,10 @@ def add_beer():
         db.session.add(beer)
         try:
             db.session.commit()
-            flash(u"Successfully added beer '%s'" % beer.name)
+            flash(u"Successfully added beer '%s' as ID '%s'" % (beer.name, beer.id))
         except exc.SQLAlchemyError:
             flash(u"Beer '%s' already exists in the database." % beer.name)
         return redirect(url_for('add_beer'))
-    session.pop('_flashes', None)
     return render_template('admin/add_beer.html', title='Beer Configuration', form=form)
 
 
@@ -186,7 +184,6 @@ def utilities():
 @login_required
 @admin_required
 def clean_database():
-    session.pop('_flashes', None)
     try:
         delete_count_users = User.query.filter_by(role=0).delete()
         delete_count_surveys = Survey.query.delete()

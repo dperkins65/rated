@@ -23,7 +23,7 @@
 <div class="row">
   {% for beer in all_beers %}
     <div class="col-md-3">
-      <p><a class="btn btn-primary btn-lg btn-block" href="{{ url_for('admin_survey', beer_id=beer.id) }}" role="button">Beer {{ beer.id }}</a></p>
+      <p><a class="btn btn-primary btn-lg btn-block" href="{{ url_for('admin_survey', beer_id=beer.id) }}" role="button">Beer #{{ beer.id }}</a></p>
     </div>
   {% endfor %}
 </div>

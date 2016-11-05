@@ -11,16 +11,16 @@
 		{% endif %}
 
 		<p>Please rate some damn beers.</p>
-		
+
 	</div>
 
 	<div class="row">
 		{% for beer in all_beers %}
 			<div class="col-md-3">
 			{% if not beer in surveyed_beers %}
-				<p><a class="btn btn-primary btn-lg btn-block" href="{{ url_for('survey', beer_id=beer.id) }}" role="button">Beer {{ beer.id }}</a></p>
+				<p><a class="btn btn-primary btn-lg btn-block" href="{{ url_for('survey', beer_id=beer.id) }}" role="button">Beer #{{ beer.id }}</a></p>
 			{% else %}
-				<p><a class="btn btn-primary btn-lg btn-block disabled" role="button">Beer {{ beer.id }}</a></p>
+				<p><a class="btn btn-primary btn-lg btn-block disabled" role="button">Beer #{{ beer.id }}</a></p>
 			{% endif %}
 			</div>
     {% endfor %}
