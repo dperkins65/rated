@@ -12,6 +12,7 @@ from app.forms import SurveyForm
 @app.route('/survey/', methods=['GET', 'POST'])
 @login_required
 def survey():
+    g.user = current_user
     beer_id = request.args.get('beer_id', None)
     if beer_id:
         session['beer_id'] = beer_id
@@ -19,7 +20,7 @@ def survey():
     if request.method == 'POST' and form.validate():
         survey = Survey()
         form.populate_obj(survey)
-        survey.user = current_user
+        survey.user = g.user
         survey.beer = Beer.query.get(session['beer_id'])
         db.session.add(survey)
         db.session.commit()
