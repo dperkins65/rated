@@ -46,16 +46,15 @@
       <img src="{{ url_for('static', filename='img/beer/placeholder.png') }}" width="200"/>
       <!-- </object> TODO -->
       <div class="carousel-caption">
-        <div class="row bottom-buffer">
+        <div class="row">
           <div class="col-md-3"></div>
           <div class="col-md-12">
             <h3>{{ d.brewery_name }}</h3>
             <h3>{{ d.beer_name }}</h3>
-            <br>
             <p><small>#{{ d.beer_id }}</small></p>
             <p>{{ d.beer_style }}</p>
             {% if d.beer_notes %}
-            <p>{{ d.beer_notes }}</p>
+            <p><small>{{ d.beer_notes }}</small></p>
             {% else %}
             <br>
             {% endif %}
