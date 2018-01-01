@@ -1,0 +1,48 @@
+#
+# This dockerfile builds and runs the backend application
+#
+# Running this container directly is acceptable in development but
+# it is better off deployed using docker-compose which will proxy the
+# backend with nginx according to docker-compose.yml. If you build this
+# container directly, change the protocol in the CMD to 'http' from 'uwsgi'.
+#
+# For more information and shortcut scripts see ./utils
+#
+
+# Use Alpine Linux as the base cause wicked small
+FROM alpine:3.6
+
+# Install required packages
+RUN apk add --update \
+gcc \
+musl-dev \
+libffi-dev \
+openssl-dev \
+python3 \
+python3-dev \
+uwsgi \
+uwsgi-python3
+
+# Make ports available to the world
+EXPOSE 8000 8001
+
+# Set working directory
+WORKDIR /app
+
+# Add and install latest link-generator
+COPY dist/rated-* .
+RUN pip3 install rated-*
+
+# Add the uwsgi config
+COPY ./deploy/uwsgi.ini .
+
+# Add the link-generator/uwsgi runner
+COPY ./deploy/runner.py .
+
+# Configure the database
+# This is something of a hack since we're using sqlite for this app
+ENV FLASK_APP=app
+RUN flask recreate_db
+
+# Run the app when the container launches
+CMD [ "uwsgi", "--ini", "uwsgi.ini" ]

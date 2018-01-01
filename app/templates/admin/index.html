@@ -1,57 +1,48 @@
-{% extends "admin/layout.html" %}
+{% extends "layout.html" %}
+
 
 {% block content %}
 
-<div class="pull-right">
-  <div class="dropdown">
-    <button class="btn btn-default btn-s dropdown-toggle" type="button" id="dropdownMenu1" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
-      Configuration
-      <span class="caret"></span>
-    </button>
-    <ul class="dropdown-menu" aria-labelledby="dropdownMenu1">
-      <li><a href="{{ url_for('add_style') }}">Add a style</a></li>
-      <li><a href="{{ url_for('add_brewery') }}">Add a brewery</a></li>
-      <li><a href="{{ url_for('add_beer') }}">Add a beer</a></li>
-    </ul>
-  </div>
-</div>
-
-<div class="page-header">
-   <h3>Surveys</h2>
-</div>
-
-<div class="row">
-  {% for beer in all_beers %}
-    <div class="col-md-3">
-      <p><a class="btn btn-primary btn-lg btn-block" href="{{ url_for('admin_survey', beer_id=beer.id) }}" role="button">Beer #{{ beer.id }}</a></p>
+<div class="container">
+  <div class="row">
+    <div class="col">
+    <h3>Instructions</h3>
+      <ul>
+        <li>Step 1: Create a new "brand" from the Configuration heading.  For instance, this could be Budweiser or Trillium.</li>
+        <li>Step 2: Create a new "model" from the Configuration heading.  For instance, this could be Julius or Melcher Street.</li>
+        <ul>
+          <li>This list of models is what forms the collection of surveys that is available to non-admin users.</li>
+        </ul>
+        <li>Step 3: Run a survey.  Use the <a href="{{ url_for('admin.log') }}">Log</a> to see the survey completion percentage.</li>
+        <ul>
+          <li>You do not need to do anything in the app to "run a survey".  Simply have your users log in and submit their rating.</li>
+        </ul>
+        <li>Step 4: Review the results with the <a href="{{ url_for('admin.results') }}">Results</a> view.</li>
+        <ul>
+          <li>Click on an ID number for additional detail.</li>
+        </ul>
+      </ul>
     </div>
-  {% endfor %}
-</div>
-
-<div class="page-header">
-  <h3>Results</h3>
-</div>
-
-<div class="row">
-  <div class="col-md-4">
-    <p><a class="btn btn-primary btn-lg btn-block" href="{{ url_for('results_review') }}" role="button">Results Review</a></p>
+  </div>
+  <div class="row">
+    <div class="col">
+      <h5>Cleaning the Database</h5>
+      <p>
+        To clean the database before running a series of surveys selecect Advanced > Clean the database.
+        This will delete all non-admin users and survey entries from the database.
+        It will not delete brands and models.
+      </p>
+    </div>
+  </div>
+  <div class="row">
+    <div class="col">
+      <h5>Clearing the Database</h5>
+      <p>
+        If you wish to start fresh you can clear the database entirely.
+        This will delete everything except for the 'admin' user.
+      </p>
+    </div>
   </div>
 </div>
-
-<!-- <div class="page-header">
-  <h3>Statistics</h3>
-</div>
-
-<div class="row">
-  <div class="col-md-3">
-    <p><a class="btn btn-primary btn-lg btn-block" href="{{ url_for('ranking_overall') }}" role="button">Overall Ranking</a></p>
-  </div>
-  <div class="col-md-3">
-    <p><a class="btn btn-primary btn-lg btn-block" href="{{ url_for('ranking_style') }}" role="button">Ranking by Style</a></p>
-  </div>
-  <div class="col-md-3">
-    <p><a class="btn btn-primary btn-lg btn-block" href="{{ url_for('ranking_ba') }}" role="button">Ranking vs. BA Rating</a></p>
-  </div>
-</div> -->
 
 {% endblock %}

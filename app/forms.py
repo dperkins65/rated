@@ -1,36 +1,32 @@
-# -*- coding: utf-8 -*-
-
-from flask.ext.wtf import Form, fields, validators, Required, Email, Regexp
-from models import User, Brewery, Beer, Style
-from app import db
-
-
-class LoginForm(Form):
-    name = fields.TextField(validators=[Required()])
-
-    def get_user(self):
-        return db.session.query(User).filter_by(name=self.name.data).first()
+from flask_wtf import FlaskForm
+from flask_wtf.csrf import CSRFProtect
+from wtforms import SubmitField, SelectField, StringField, TextAreaField
+from wtforms.validators import DataRequired
 
 
-class SurveyForm(Form):
-    rating = fields.RadioField('Rating',
-        choices=[('1', 'One Point'), ('2', 'Two Points'),
-            ('3', 'Three Points'), ('4', 'Four Points'), ('5', 'Five Points')],
-        validators=[Required()], default=None)
+csrf = CSRFProtect()
 
 
-class AddStyleForm(Form):
-    name = fields.TextField(u"Style", validators=[Required()], default=None)
+class LoginForm(FlaskForm):
+    name = StringField(u'Name', validators=[DataRequired()])
+    submit = SubmitField(u"Sign in")
 
 
-class AddBreweryForm(Form):
-    name = fields.TextField(u"Brewery", validators=[Required()], default=None)
+class SurveyForm(FlaskForm):
+    rating = SelectField(u'Rating',
+        choices=[('1', u'One point'), ('2', u'Two points'),
+            ('3', u'Three points'), ('4', u'Four points'), ('5', u'Five points')],
+        validators=[DataRequired()], default=None)
+    submit = SubmitField(u"Submit")
 
 
-class AddBeerForm(Form):
-    brewery = fields.SelectField(u"Brewery", validators=[Required()], coerce=int)
-    name = fields.TextField(u"Beer Name", validators=[Required()])
-    style = fields.SelectField(u"Beer Style", validators=[Required()], coerce=int)
-    abv = fields.DecimalField(u"%ABV", default=0)
-    ba = fields.IntegerField(u"BeerAdvocate Rating", default=0)
-    notes = fields.TextAreaField(u'Additional Notes')
+class AddBrandForm(FlaskForm):
+    name = StringField(u"Brand", validators=[DataRequired()], default=None)
+    submit = SubmitField(u"Submit")
+
+
+class AddModelForm(FlaskForm):
+    brand = SelectField(u"Brand", validators=[DataRequired()], coerce=int)
+    name = StringField(u"Model", validators=[DataRequired()])
+    notes = TextAreaField(u"Notes")
+    submit = SubmitField(u"Submit")

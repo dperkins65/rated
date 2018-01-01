@@ -1,29 +1,25 @@
-{% extends "base.html" %}
-{% from "macro.html" import render_field %}
+{% extends "layout.html" %}
+
+
+{% block extra_css %}
+
+<link href="{{ url_for('static', filename='css/login.css') }}" rel="stylesheet">
+
+{% endblock %}
+
 
 {% block content%}
 
-<div class="hidden-sm" style="margin:16px;"></div>
-
-<div class="page-header text-center hidden-xs">
-   <h3>Beer Tasting</h3>
-   <h4>Stouts and Porters</h4>
-</div>
-
-<div class="row">
-  <div class="col-md-6 col-md-offset-3">
-    <div class="panel panel-default">
-        <div class="panel-body">
-          <form method="POST" action=".">
-            <fieldset>
-              {{ form.csrf_token }}
-              {{ render_field(form.name, class="form-control", autocomplete="off", placeholder="Your first name or nickname") }}
-              <button type="submit" id="sign_in" class="btn btn-primary btn-block">Log in</button>
-            </fieldset>
-          </form>
-      </div>
-    </div>
-  </div>
+<div class="container">
+  <form class="form-signin" method="POST">
+    {{ form.csrf_token }}
+    <h2 class="form-signin-heading">Please sign in</h2>
+    {{ form.name.label(id="inputName", class="sr-only") }}
+    {{ form.name(id="inputName", class="form-control", type="name", placeholder="Name or nickname") }}
+    {{ form.submit.label(class="sr-only") }}
+    {{ form.submit(class="btn btn-primary btn-block btn-lg", type="submit") }}
+  </form>
+  <p id="nameHelp" class="lead text-muted text-center">No password is required. Each user must sign in with a unique alias.</p>
 </div>
 
 {% endblock %}

@@ -1,29 +1,31 @@
-{% extends "base.html" %}
+{% extends "layout.html" %}
+
 
 {% block content %}
 
+<div class="container">
 	<div class="jumbotron">
-
-		{% if not surveyed_beers %}
+		{% if not surveyed_models %}
 		<h2>Hello</h2>
 		{% else %}
-		<h2>Welcome back.</h2>
+		<h2>Welcome back {{ user.name|capitalize }}!</h2>
 		{% endif %}
-
-		<p>Please rate some damn beers.</p>
-
+		<p>Please rate some damn stuff.</p>
 	</div>
+</container>
 
+<div class="container">
 	<div class="row">
-		{% for beer in all_beers %}
+		{% for model in models %}
 			<div class="col-md-3">
-			{% if not beer in surveyed_beers %}
-				<p><a class="btn btn-primary btn-lg btn-block" href="{{ url_for('survey', beer_id=beer.id) }}" role="button">Beer #{{ beer.id }}</a></p>
+			{% if not model in surveyed_models %}
+				<p><a class="btn btn-primary btn-lg btn-block" href="{{ url_for('survey.survey', model_id=model.id) }}" role="button">Survey #{{ model.id }}</a></p>
 			{% else %}
-				<p><a class="btn btn-primary btn-lg btn-block disabled" role="button">Beer #{{ beer.id }}</a></p>
+				<p><a class="btn btn-primary btn-lg btn-block disabled" role="button">Survey #{{ model.id }}</a></p>
 			{% endif %}
 			</div>
     {% endfor %}
 	</div>
+</div>
 
 {% endblock %}

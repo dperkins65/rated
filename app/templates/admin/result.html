@@ -1,0 +1,33 @@
+{% extends "layout.html" %}
+
+
+{% block content %}
+
+<div class="container">
+  <h3>{{ surveys[0].model.brand.name }} {{ surveys[0].model.name }}</h3>
+  <p class="text-muted">ID #{{ surveys[0].model.id }}</p>
+  {% if surveys[0].model.notes %}
+    <h5 class="text-muted">Notes</h5>
+    <p class="text-muted">{{ surveys[0].model.notes }}</p>
+  {% endif %}
+  <div class="table-responsive">
+    <table class="table table-striped">
+      <thead>
+        <tr>
+          <th>User</th>
+          <th>Rating</th>
+        </tr>
+      </thead>
+      <tbody>
+        {% for survey in surveys %}
+          <tr>
+            <td>{{ survey.user.name|capitalize }}</td>
+            <td>{{ survey.rating }}</td>
+          </tr>
+        {% endfor %}
+      </tbody>
+    </table>
+  </div>
+</div>
+
+{% endblock %}

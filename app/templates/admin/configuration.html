@@ -1,0 +1,34 @@
+{% extends "layout.html" %}
+
+
+{% block content %}
+
+<div class="container">
+  <h3>Configuration</h3>
+  <p class="text-muted">
+    This shows the full list of surveys. A survey consists of a Model and associated Brand.<br>
+    Use the ID provided for identification when performing a blind tasting.  This ID is consistent across views in the app.
+  </p>
+  <div class="table-responsive">
+    <table class="table table-striped">
+      <thead>
+        <tr>
+          <th>ID</th>
+          <th>Brand</th>
+          <th>Model</th>
+        </tr>
+      </thead>
+      <tbody>
+        {% for model in models %}
+          <tr>
+            <td>{{ model.id }}</td>
+            <td>{{ model.brand.name }}</td>
+            <td>{{ model.name }}</td>
+          </tr>
+        {% endfor %}
+      </tbody>
+    </table>
+  </div>
+</div>
+
+{% endblock %}
