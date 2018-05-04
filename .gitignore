@@ -111,3 +111,6 @@ ENV/
 
 # Development databases
 *.db
+
+# Private files
+PRIVATE_*
