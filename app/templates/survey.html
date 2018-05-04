@@ -1,5 +1,5 @@
 {% extends "layout.html" %}
-
+{% from "_helpers.html" import render_field %}
 
 {% block extra_css %}
 
@@ -16,6 +16,7 @@
     <h2 class="form-survey-heading">Rate this drank</h2>
     {{ form.rating.label(id="inputRating", class="sr-only") }}
     {{ form.rating(id="inputRating", class="form-control", type="rating") }}
+    {{ render_field(form.notes, class='form-control', placeholder="Optional") }}
     {{ form.submit.label(class="sr-only") }}
     {{ form.submit(class="btn btn-primary", type="submit") }}
   </form>

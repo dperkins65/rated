@@ -8,13 +8,14 @@
     <form method="POST">
       <div class="form-group">
         {{ form.csrf_token }}
-        {% if form.brand.choices|count() > 0 %}
-          {{ render_field(form.brand, class='form-control') }}
+        {% if form.make.choices|count() > 0 %}
+          {{ render_field(form.make, class='form-control') }}
         {% else %}
-          {{ form.brand.label }}
-          <p class="text-muted">You must add at least one <a href="{{ url_for('admin.add_brand') }}">Brand</a> first</p>
+          {{ form.make.label }}
+          <p class="text-muted">You must add at least one <a href="{{ url_for('admin.add_make') }}">Make</a> first</p>
         {% endif %}
-        {{ render_field(form.name, class='form-control', placeholder="Model, such as Light") }}
+        {{ render_field(form.name, class='form-control', placeholder="Name, such as Light") }}
+        {{ render_field(form.vintage, class='form-control', type='date') }}
         {{ render_field(form.notes, class='form-control', placeholder="Optional") }}
         <br/>
         {{ form.submit.label(class="sr-only")}}
@@ -22,7 +23,7 @@
       </div>
     </form>
   </div>
-  <p class="text-muted">Or, add a <a href="{{ url_for('admin.add_brand') }}">brand<a/>.</p>
+  <p class="text-muted">Add a <a href="{{ url_for('admin.add_make') }}">Make<a/>.</p>
 </div>
 
 {% endblock %}

@@ -11,8 +11,9 @@
       <thead>
         <tr>
           <th>ID</th>
-          <th>Brand</th>
+          <th>Make</th>
           <th>Model</th>
+          <th>Vintage</th>
           <th>Mean</th>
           <th>Std Dev</th>
           <th>Range</th>
@@ -26,8 +27,9 @@
             {% else %}
               <td>{{ result.model_id }}</td>
             {% endif %}
-            <td>{{ result.brand_name }}</td>
+            <td>{{ result.make_name }}</td>
             <td>{{ result.model_name }}</td>
+            <td>{{ result.model_vintage }}</td>
             <td>{{ result.ratings_mean }}</td>
             <td>{{ result.ratings_std }}</td>
             <td>{{ result.ratings_range }}</td>

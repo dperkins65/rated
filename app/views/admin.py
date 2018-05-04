@@ -8,9 +8,9 @@ from flask_login import login_required
 
 from sqlalchemy import func, exc, desc
 
-from app.database import db, User, Survey, Model, Brand
+from app.database import db, User, Survey, Model, Make
 from app.decorators import admin_required
-from app.forms import AddModelForm, AddBrandForm
+from app.forms import AddModelForm, AddMakeForm
 
 
 mod = Blueprint('admin', __name__)
@@ -46,36 +46,38 @@ def log():
     return render_template('admin/log.html', log=log)
 
 
-@mod.route('/admin/results/')
-@login_required
-@admin_required
-def results():
-    models = Model.query.all()
-    surveys = Survey.query.all()
+def calculate_results():
     results = []
+    models = Model.query.all()
     for model in models:
+        surveys = Survey.query.filter_by(model=model)
         ratings_list = [survey.rating for survey in surveys if survey.model == model]
         if not ratings_list:
             ratings_list = [0]
-        ratings_array = numpy.array(ratings_list)
-        ratings_mean = numpy.nan_to_num(numpy.around(numpy.mean(ratings_array, axis=0), decimals=2))
-        ratings_std = numpy.nan_to_num(numpy.around(numpy.std(ratings_array, axis=0), decimals=2))
         try:
             ratings_range = (min(ratings_list), max(ratings_list))
         except ValueError:
             ratings_range = (int(0), int(0))
-        user_ratings = [{'user': survey.user.name,
-                         'rating': survey.rating} for survey in surveys if survey.model == model]
-        results.append({'model_id': model.id,
+        ratings_array = numpy.array(ratings_list)
+        results.append({'make_name': model.make.name,
+                        'model_id': model.id,
                         'model_name': model.name,
+                        'model_vintage': model.vintage.strftime('%b %d, %Y') if model.vintage != None else model.vintage,
                         'model_notes': model.notes,
-                        'brand_name': model.brand.name,
-                        'ratings_mean': ratings_mean,
-                        'ratings_std': ratings_std,
+                        'ratings_mean': numpy.nan_to_num(numpy.around(numpy.mean(ratings_array, axis=0), decimals=2)),
+                        'ratings_std': numpy.nan_to_num(numpy.around(numpy.std(ratings_array, axis=0), decimals=2)),
                         'ratings_range': ratings_range,
-                        'user_ratings': user_ratings,
+                        'user_ratings': [{'user': survey.user.name,
+                                         'rating': survey.rating} for survey in surveys if survey.model == model],
                         })
-    results = sorted(results, key=itemgetter('ratings_mean'))
+    return sorted(results, key=itemgetter('ratings_mean'))
+
+
+@mod.route('/admin/results/')
+@login_required
+@admin_required
+def results():
+    results = calculate_results()
     return render_template('admin/results.html', results=results)
 
 
@@ -84,7 +86,12 @@ def results():
 @admin_required
 def result(model_id):
     surveys = Survey.query.filter_by(model_id=model_id).order_by(desc('rating'))
-    return render_template('admin/result.html', surveys=surveys)
+    results = calculate_results()
+    result = [x for x in results if x['model_id'] == model_id][0]
+    results.reverse()
+    suf = lambda n: "%d%s"%(n,{1:"st",2:"nd",3:"rd"}.get(n if n<20 else n%10,"th"))
+    rank = suf(results.index(result) + 1)
+    return render_template('admin/result.html', surveys=surveys, result=result, rank=rank)
 
 
 @mod.route('/admin/configuration/')
@@ -95,22 +102,22 @@ def configuration():
     return render_template('admin/configuration.html', models=models)
 
 
-@mod.route('/admin/configuration/add_brand/', methods=['GET', 'POST'])
+@mod.route('/admin/configuration/add_make/', methods=['GET', 'POST'])
 @login_required
 @admin_required
-def add_brand():
-    form = AddBrandForm()
+def add_make():
+    form = AddMakeForm()
     if form.validate_on_submit():
-        brand = Brand()
-        form.populate_obj(brand)
-        db.session.add(brand)
+        make = Make()
+        form.populate_obj(make)
+        db.session.add(make)
         try:
             db.session.commit()
-            flash(u"Successfully added brand '%s'" % brand.name, "success")
+            flash(u"Successfully added make '%s'" % make.name, "success")
         except exc.SQLAlchemyError:
-            flash(u"Brand '%s' already exists in the database." % brand.name, "warning")
-        return redirect(url_for('admin.add_brand'))
-    return render_template('admin/add_brand.html', form=form)
+            flash(u"Make '%s' already exists in the database." % make.name, "warning")
+        return redirect(url_for('admin.add_make'))
+    return render_template('admin/add_make.html', form=form)
 
 
 @mod.route('/admin/configuration/add_model/', methods=['GET', 'POST'])
@@ -118,11 +125,12 @@ def add_brand():
 @admin_required
 def add_model():
     form = AddModelForm()
-    form.brand.choices = sorted([(x.id, x.name) for x in Brand.query.all()], key=lambda x: x[1])
+    form.make.choices = sorted([(x.id, x.name) for x in Make.query.all()], key=lambda x: x[1])
     if form.validate_on_submit():
         model = Model(
-            brand = Brand.query.get(form.data['brand']),
+            make = Make.query.get(form.data['make']),
             name = form.data['name'],
+            vintage = form.data['vintage'],
             notes = form.data['notes'])
         db.session.add(model)
         try:
@@ -156,9 +164,9 @@ def clear_database():
         User.query.filter_by(role=0).delete()
         Survey.query.delete()
         Model.query.delete()
-        Brand.query.delete()
+        Make.query.delete()
         db.session.commit()
     except:
         db.session.rollback()
-    flash(u"Successfully cleared the database.  Deleted all non-admin users, brands, models, and surveys.", "info")
+    flash(u"Successfully cleared the database.  Deleted all non-admin users, makes, models, and surveys.", "info")
     return redirect(url_for('admin.admin'))

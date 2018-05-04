@@ -8,14 +8,14 @@
     <form method="POST">
       <div class="form-group">
         {{ form.csrf_token }}
-        {{ render_field(form.name, class='form-control', placeholder="Brand, such as Bud") }}
+        {{ render_field(form.name, class='form-control', placeholder="Name, such as Bud") }}
         <br/>
         {{ form.submit.label(class="sr-only")}}
         {{ form.submit(class='btn btn-primary') }}
       </div>
     </form>
   </div>
-  <p class="text-muted">Or, add a <a href="{{ url_for('admin.add_model') }}">model<a/>.</p>
+  <p class="text-muted">Add a <a href="{{ url_for('admin.add_model') }}">Model<a/>.</p>
 </div>
 
 {% endblock %}

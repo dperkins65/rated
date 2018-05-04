@@ -4,18 +4,73 @@
 {% block content %}
 
 <div class="container">
-  <h3>{{ surveys[0].model.brand.name }} {{ surveys[0].model.name }}</h3>
-  <p class="text-muted">ID #{{ surveys[0].model.id }}</p>
-  {% if surveys[0].model.notes %}
-    <h5 class="text-muted">Notes</h5>
-    <p class="text-muted">{{ surveys[0].model.notes }}</p>
-  {% endif %}
+  <div class="row">
+    <div class="col-md">
+      <h2>{{ surveys[0].model.make.name }} {{ surveys[0].model.name }}</h2>
+      <p class="text-muted">ID #{{ surveys[0].model.id }}</p>
+    </div>
+  </div>
+  <div class="row">
+    <div class="col-md">
+      <h5 class="text-muted">Vintage</h5>
+      {% if surveys[0].model.vintage %}
+        <p class="text-muted">{{ surveys[0].model.vintage.strftime('%b %d, %Y') if surveys[0].model.vintage != None else surveys[0].model.vintage }}</p>
+      {% else %}
+        <p class="text-muted">None</p>
+      {% endif %}
+    </div>
+  </div>
+  <div class="row">
+    <div class="col-md">
+      {% if surveys[0].model.notes %}
+        <h5 class="text-muted">Notes</h5>
+        <p class="text-muted">{{ surveys[0].model.notes }}</p>
+      {% endif %}
+    </div>
+  </div>
+</div>
+
+<div class="container text-center">
+  <div class="jumbotron">
+    <div class="row">
+      <div class="col-md-3">
+        <h5>Ranking</h5>
+      </div>
+      <div class="col-md-3">
+        <h5>Mean</h5>
+      </div>
+      <div class="col-md-3">
+        <h5>Std Dev</h5>
+      </div>
+      <div class="col-md-3">
+        <h5>Range</h5>
+      </div>
+    </div>
+    <div class="row">
+      <div class="col-md-3">
+        <b>{{ rank }}</b>
+      </div>
+      <div class="col-md-3">
+        <b>{{ result.ratings_mean }}</b>
+      </div>
+      <div class="col-md-3">
+        <b>{{ result.ratings_std }}</b>
+      </div>
+      <div class="col-md-3">
+        <b>{{ result.ratings_range }}</b>
+      </div>
+    </div>
+  </div>
+</div>
+
+<div class="container">
   <div class="table-responsive">
     <table class="table table-striped">
       <thead>
         <tr>
           <th>User</th>
           <th>Rating</th>
+          <th>Notes</th>
         </tr>
       </thead>
       <tbody>
@@ -23,6 +78,7 @@
           <tr>
             <td>{{ survey.user.name|capitalize }}</td>
             <td>{{ survey.rating }}</td>
+            <td>{{ survey.notes }}</td>
           </tr>
         {% endfor %}
       </tbody>

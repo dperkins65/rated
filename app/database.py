@@ -79,8 +79,8 @@ class User(UserMixin, Base):
         return '<User %r:%r>' % (role, self.name)
 
 
-class Brand(Base):
-    __tablename__ = 'brands'
+class Make(Base):
+    __tablename__ = 'makes'
 
     name = db.Column(db.String(255), unique=True)
 
@@ -90,36 +90,40 @@ class Brand(Base):
         self.name = name
 
     def __repr__(self):
-        return '<Brand %r>' % (self.name)
+        return '<Make %r>' % (self.name)
 
 
 class Model(Base):
     __tablename__ = 'models'
 
     name = db.Column(db.String(255), unique=True)
-    brand = db.relationship('Brand', backref='models')
-    brand_id = db.Column(db.Integer, db.ForeignKey('brands.id'))
+    make = db.relationship('Make', backref='models')
+    make_id = db.Column(db.Integer, db.ForeignKey('makes.id'))
+    vintage = db.Column(db.Date)
     notes = db.Column(db.Text)
 
-    __table_args__ = (UniqueConstraint(brand_id, name),)
+    __table_args__ = (UniqueConstraint(make_id, name),)
 
     def __init__(
             self,
             name=None,
-            brand=None,
+            make=None,
+            vintage=None,
             notes=None):
         self.name = name
-        self.brand = brand
+        self.make = make
+        self.vintage = vintage
         self.notes = notes
 
     def __repr__(self):
-        return '<Model %r:%r>' % (self.brand.name, self.name)
+        return '<Model %r:%r>' % (self.make.name, self.name)
 
 
 class Survey(Base):
     __tablename__ = 'surveys'
 
     rating = db.Column(db.Integer)
+    notes = db.Column(db.Text)
     user = db.relationship('User', uselist=False, backref='surveys')
     user_id = db.Column(db.Integer, db.ForeignKey('users.id'))
     model = db.relationship('Model', backref='surveys')
@@ -128,13 +132,15 @@ class Survey(Base):
     def __init__(
             self,
             rating=None,
+            notes=None,
             user=None,
             model=None):
         self.rating = rating
+        self.notes = notes
         self.user = user
         self.model = model
 
     def __repr__(self):
         return '<Survey %r:%r:%r>' % (self.user.name,
-                                      self.model.brand.name,
+                                      self.model.make.name,
                                       self.model.name)
