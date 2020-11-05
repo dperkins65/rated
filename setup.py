@@ -1,7 +1,3 @@
-#
-# This setup script cleans and builds the link-generator package
-#
-
 import os, sys
 from setuptools import setup, Command
 
